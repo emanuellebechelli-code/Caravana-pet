@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Estratégia de Crescimento - Emanuelle Bechelli</title>
+  <style>
+    :root {
+      --bg: #f7f4ef;
+      --surface: #ffffff;
+      --text: #26221f;
+      --muted: #6d625b;
+      --line: #e3d9cf;
+      --accent: #d45f3c;
+      --accent-dark: #8b3826;
+      --ink: #173f3a;
+      --soft: #fff2ea;
+      --shadow: 0 18px 40px rgba(38, 34, 31, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px clamp(18px, 5vw, 56px);
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .brand span:first-child {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      color: #fff;
+      background: var(--ink);
+      border-radius: 50%;
+      font-size: 0.82rem;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 6px;
+    }
+
+    .nav a {
+      padding: 9px 11px;
+      border-radius: 8px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: #fff;
+      background: var(--accent);
+      outline: none;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.62fr);
+      gap: clamp(24px, 5vw, 64px);
+      align-items: end;
+      padding: clamp(48px, 8vw, 96px) clamp(18px, 5vw, 56px);
+      background:
+        linear-gradient(135deg, rgba(23, 63, 58, 0.95), rgba(139, 56, 38, 0.82)),
+        url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80") center / cover;
+      color: #fff;
+    }
+
+    .eyebrow {
+      margin: 0 0 12px;
+      color: #ffd2bf;
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 900px;
+      font-size: clamp(2.7rem, 7vw, 6rem);
+      line-height: 0.96;
+    }
+
+    .hero p:not(.eyebrow) {
+      max-width: 760px;
+      margin: 22px 0 0;
+      font-size: clamp(1.05rem, 2vw, 1.35rem);
+      line-height: 1.58;
+    }
+
+    .hero-card {
+      padding: 24px;
+      color: var(--text);
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card strong {
+      display: block;
+      color: var(--accent-dark);
+      font-size: 1.05rem;
+      margin-bottom: 10px;
+    }
+
+    .hero-card code {
+      display: block;
+      padding: 14px;
+      color: var(--ink);
+      background: var(--soft);
+      border: 1px solid #f3c9b7;
+      border-radius: 8px;
+      font-size: 0.96rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    main {
+      padding: 0 clamp(18px, 5vw, 56px) 64px;
+    }
+
+    .section {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: clamp(44px, 7vw, 76px) 0 0;
+    }
+
+    .section-header {
+      max-width: 800px;
+      margin-bottom: 24px;
+    }
+
+    .section h2 {
+      color: var(--ink);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+    }
+
+    .section-header p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      padding: 22px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: 0 10px 24px rgba(38, 34, 31, 0.05);
+    }
+
+    .card h3 {
+      color: var(--accent-dark);
+      font-size: 1.16rem;
+      margin-bottom: 10px;
+    }
+
+    .card p,
+    .card li {
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.62;
+    }
+
+    .card p {
+      margin: 0;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .callout {
+      padding: clamp(22px, 4vw, 34px);
+      color: #fff;
+      background: var(--ink);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .callout h2,
+    .callout h3 {
+      color: #fff;
+    }
+
+    .callout p {
+      max-width: 900px;
+      color: rgba(255, 255, 255, 0.82);
+      line-height: 1.65;
+    }
+
+    .code-block {
+      margin-top: 16px;
+      padding: 18px;
+      color: var(--ink);
+      background: var(--soft);
+      border: 1px solid #f3c9b7;
+      border-radius: 8px;
+      font-family: Consolas, "Courier New", monospace;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 16px;
+    }
+
+    .week {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 18px;
+      padding: 20px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .week strong {
+      color: var(--accent-dark);
+      font-size: 1.08rem;
+    }
+
+    .footer {
+      max-width: 1180px;
+      margin: 56px auto 0;
+      padding: 26px 0 0;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 880px) {
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero,
+      .grid,
+      .grid.two,
+      .week {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .hero {
+        padding-top: 42px;
+      }
+
+      .nav a {
+        padding-inline: 8px;
+        font-size: 0.84rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Estratégia Emanuelle">
+      <span>EB</span>
+      <span>Emanuelle Bechelli</span>
+    </a>
+    <nav class="nav" aria-label="Navegação da estratégia">
+      <a href="#diagnostico">Diagnóstico</a>
+      <a href="#perfil">Perfil</a>
+      <a href="#conteudo">Conteúdo</a>
+      <a href="#calendario">Calendário</a>
+      <a href="#90-dias">90 dias</a>
+    </nav>
+  </header>
+
+  <section class="hero" id="top">
+    <div>
+      <p class="eyebrow">Planejamento de crescimento para Instagram</p>
+      <h1>Social media com perfil visual, estratégico e vendável.</h1>
+      <p>
+        Estratégia para crescer no nicho de design, storymaker, edição de vídeo e criação de conteúdo para Instagram.
+      </p>
+    </div>
+    <aside class="hero-card">
+      <strong>Padrão central</strong>
+      <code>Antes/depois + bastidor + dica prática + prova + oferta</code>
+    </aside>
+  </section>
+
+  <main>
+    <section class="section" id="diagnostico">
+      <div class="section-header">
+        <p class="eyebrow">Diagnóstico</p>
+        <h2>Oportunidade do nicho</h2>
+        <p>
+          Seu nicho é naturalmente visual. Isso permite mostrar transformação, bastidor e prova de habilidade em vídeos curtos, formatos com alto potencial de retenção e compartilhamento.
+        </p>
+      </div>
+      <div class="grid two">
+        <article class="card">
+          <h3>Vantagem</h3>
+          <p>Você consegue provar valor sem explicar demais: basta mostrar antes/depois, edição, criação de stories, organização visual e resultado final.</p>
+        </article>
+        <article class="card">
+          <h3>Risco</h3>
+          <p>O nicho pode parecer genérico se o perfil comunicar apenas “social media”. A promessa precisa dizer para quem você trabalha e qual resultado entrega.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="perfil">
+      <div class="section-header">
+        <p class="eyebrow">Posicionamento</p>
+        <h2>Bio, promessa e vitrine</h2>
+        <p>O perfil precisa funcionar como portfólio vivo e também como página de venda simples.</p>
+      </div>
+      <div class="callout">
+        <h3>Frase central</h3>
+        <p>Design, stories e vídeos para marcas que querem parecer mais profissionais e vender melhor no Instagram.</p>
+      </div>
+      <div class="grid" style="margin-top: 16px;">
+        <article class="card">
+          <h3>Bio recomendada</h3>
+          <p>Seu Instagram com cara de marca profissional<br>Design, stories, vídeos e estratégia de conteúdo<br>Atendimento para marcas e profissionais<br>Solicite orçamento no direct</p>
+        </article>
+        <article class="card">
+          <h3>Posts fixados</h3>
+          <ul>
+            <li>Quem sou e como posso te ajudar</li>
+            <li>Antes e depois: Instagram mais profissional</li>
+            <li>Serviços: design, stories, vídeo e conteúdo</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3>Destaques</h3>
+          <ul>
+            <li>Serviços</li>
+            <li>Portfólio</li>
+            <li>Clientes</li>
+            <li>Depoimentos</li>
+            <li>Bastidores</li>
+            <li>Orçamentos</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="conteudo">
+      <div class="section-header">
+        <p class="eyebrow">Conteúdo</p>
+        <h2>Pilares para crescer e vender</h2>
+        <p>Cada pilar deve equilibrar atração, autoridade e conversão.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <h3>Antes e depois</h3>
+          <p>Stories, feed, capas de Reels, roteiros e bios. É o pilar mais forte para provar habilidade visual.</p>
+        </article>
+        <article class="card">
+          <h3>Bastidores</h3>
+          <p>Criação de posts, escolha de fonte, edição de vídeo, calendário e construção de stories.</p>
+        </article>
+        <article class="card">
+          <h3>Dicas rápidas</h3>
+          <p>Erros que deixam o story amador, como organizar feed, ideias de posts e capas que chamam atenção.</p>
+        </article>
+        <article class="card">
+          <h3>Storymaker</h3>
+          <p>Sequências de stories para vender, caixinhas, enquetes, prova social e CTA.</p>
+        </article>
+        <article class="card">
+          <h3>Edição de vídeo</h3>
+          <p>Vídeo bruto versus editado, legendas dinâmicas, ritmo, cortes e ganchos para Reels.</p>
+        </article>
+        <article class="card">
+          <h3>Oferta e prova</h3>
+          <p>Pacotes, depoimentos, resultados, prints de aprovações, agenda aberta e processo de trabalho.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header">
+        <p class="eyebrow">Reels</p>
+        <h2>Formatos prontos para gravar</h2>
+      </div>
+      <div class="grid two">
+        <article class="card">
+          <h3>Esse story venderia mais se...</h3>
+          <div class="code-block">Gancho: Esse story está bonito, mas não vende.
+Cena 1: Mostre um story genérico.
+Cena 2: Aponte o problema.
+Cena 3: Mostre sua versão.
+CTA: Salve para revisar seus stories.</div>
+        </article>
+        <article class="card">
+          <h3>Antes e depois de design</h3>
+          <div class="code-block">Gancho: Olha como um design simples muda a percepção da marca.
+Cena 1: Antes.
+Cena 2: O que estava errado.
+Cena 3: Depois.
+CTA: Me chama no direct com a palavra DESIGN.</div>
+        </article>
+        <article class="card">
+          <h3>Arrume seu perfil comigo</h3>
+          <div class="code-block">Gancho: Se seu Instagram não passa confiança, começa por isso.
+Cena 1: Bio.
+Cena 2: Destaques.
+Cena 3: Posts fixados.
+CTA: Comente PERFIL que eu mando um checklist.</div>
+        </article>
+        <article class="card">
+          <h3>Editando vídeo em 15 segundos</h3>
+          <div class="code-block">Gancho: O vídeo bruto não prende atenção. A edição faz isso.
+Cena 1: Vídeo bruto.
+Cena 2: Corte, legenda e ritmo.
+Cena 3: Resultado final.
+CTA: Envie para quem grava vídeo mas não sabe editar.</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="calendario">
+      <div class="section-header">
+        <p class="eyebrow">Calendário</p>
+        <h2>Plano de 30 dias</h2>
+        <p>Frequência recomendada: 5 Reels por semana, 2 carrosséis por semana, stories todos os dias, 1 oferta direta por semana e 1 prova social por semana.</p>
+      </div>
+      <div class="timeline">
+        <div class="week">
+          <strong>Semana 1<br>Perfil profissional</strong>
+          <ul>
+            <li>3 erros que deixam seu Instagram amador</li>
+            <li>Antes/depois de bio</li>
+            <li>Arrumando destaques</li>
+            <li>Posts fixados que todo negócio precisa</li>
+            <li>Checklist de perfil profissional</li>
+          </ul>
+        </div>
+        <div class="week">
+          <strong>Semana 2<br>Design que vende</strong>
+          <ul>
+            <li>Antes/depois de post</li>
+            <li>Hierarquia visual em 15 segundos</li>
+            <li>Erro de fonte/cor</li>
+            <li>Capa de Reels antes/depois</li>
+            <li>Design bonito x design estratégico</li>
+          </ul>
+        </div>
+        <div class="week">
+          <strong>Semana 3<br>Stories</strong>
+          <ul>
+            <li>Sequência de stories para vender</li>
+            <li>Story de bastidor</li>
+            <li>Story de prova social</li>
+            <li>Enquete que gera resposta</li>
+            <li>Como criar CTA nos stories</li>
+          </ul>
+        </div>
+        <div class="week">
+          <strong>Semana 4<br>Vídeo e conversão</strong>
+          <ul>
+            <li>Vídeo bruto vs editado</li>
+            <li>Gancho para prender atenção</li>
+            <li>Legenda dinâmica</li>
+            <li>Roteiro de Reel para vender</li>
+            <li>Agenda aberta para criação de conteúdo</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="90-dias">
+      <div class="section-header">
+        <p class="eyebrow">Escala</p>
+        <h2>Plano de crescimento em 90 dias</h2>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <h3>Dias 1 a 30</h3>
+          <p>Ajustar bio, destaques e posts fixados. Publicar antes/depois toda semana, mostrar bastidores diariamente e testar 20 ganchos.</p>
+        </article>
+        <article class="card">
+          <h3>Dias 31 a 60</h3>
+          <p>Transformar formatos bons em séries: “Arrumando perfis”, “Story que vende”, “Design antes/depois” e “Vídeo bruto vs editado”.</p>
+        </article>
+        <article class="card">
+          <h3>Dias 61 a 90</h3>
+          <p>Lançar diagnóstico, publicar estudos de caso, abrir agenda semanalmente e fazer collabs com negócios locais e prestadores de serviço.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="callout">
+        <h2>Oferta inicial</h2>
+        <p>Diagnóstico visual do Instagram: análise da bio, feed, stories, destaques e 5 ideias de conteúdo. Para receber valores, envie “ANÁLISE” no direct.</p>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Estratégia criada para o nicho de social media, design, storymaker, edição de vídeo e criação de conteúdo para Instagram. Referência de boas práticas: Meta recomenda acompanhar criação, engajamento, alcance, monetização e diretrizes no painel profissional.
+    </footer>
+  </main>
+</body>
+</html>
